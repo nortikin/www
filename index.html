@@ -1,8 +1,101 @@
-<html>
+<!DOCTYPE html>
+<html lang="ru">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Содержимое папки</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #333;
+        }
+        a {
+            display: block;
+            padding: 8px;
+            margin: 5px 0;
+            color: #0066cc;
+            text-decoration: none;
+            border-left: 3px solid transparent;
+        }
+        a:hover {
+            background-color: #f0f0f0;
+            border-left-color: #0066cc;
+        }
+    </style>
 </head>
-
 <body>
-  <a href='Faraons_pants'> Фараоновы Штаны</a>
+    <h1>📁 Содержимое папки</h1>
+    
+    <div id="folder-list">
+        <!-- Папки будут добавлены через JavaScript -->
+    </div>
+
+    <script>
+        // Функция для получения списка папок (работает только на сервере с включенным листингом)
+        function getFolders() {
+            // ВАРИАНТ 1: Если на сервере включен листинг директорий
+            fetch(window.location.href)
+                .then(response => response.text())
+                .then(html => {
+                    // Парсим HTML для поиска ссылок на папки
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const links = doc.querySelectorAll('a');
+                    
+                    const folderList = document.getElementById('folder-list');
+                    folderList.innerHTML = '';
+                    
+                    links.forEach(link => {
+                        const href = link.getAttribute('href');
+                        // Проверяем, что это папка (заканчивается на /)
+                        if (href && href.endsWith('/')) {
+                            const folderName = decodeURIComponent(href.slice(0, -1));
+                            const folderLink = document.createElement('a');
+                            folderLink.href = href;
+                            folderLink.textContent = '📂 ' + folderName;
+                            folderList.appendChild(folderLink);
+                        }
+                    });
+                    
+                    if (folderList.children.length === 0) {
+                        folderList.innerHTML = '<p>Папки не найдены</p>';
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('folder-list').innerHTML = 
+                        '<p style="color: red;">Ошибка: Не удалось получить список папок. Убедитесь, что сервер поддерживает листинг директорий.</p>';
+                    console.error('Ошибка:', error);
+                });
+        }
+
+        // ВАРИАНТ 2: Ручной список папок (если нужен статический вариант)
+        function manualFolders() {
+            // Раскомментируйте и добавьте свои папки, если вариант 1 не работает
+            const folders = [
+                'папка 1',
+                'папка 2', 
+                'проекты',
+                'документы'
+            ];
+            
+            const folderList = document.getElementById('folder-list');
+            folders.forEach(folder => {
+                const link = document.createElement('a');
+                link.href = encodeURIComponent(folder) + '/';
+                link.textContent = '📂 ' + folder;
+                folderList.appendChild(link);
+            });
+        }
+
+        // Запускаем вариант 1 (автоматический)
+        getFolders();
+        
+        // Если вариант 1 не работает, раскомментируйте следующую строку и закомментируйте getFolders()
+        // manualFolders();
+    </script>
 </body>
 </html>
