@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Конвертированный текст</title>
+<style>
+ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.5; word-wrap: break-word; background-color: #fff; color: #24292e; padding: 20px; max-width: 800px; margin: 0 auto; } 
+/* Обычное состояние - полупрозрачное */
+img {
+    opacity: 0.4; /* Значение от 0 до 1 */
+    transition: opacity 0.3s ease; /* Плавный переход */
+}
+
+/* При наведении - полностью непрозрачное */
+img:hover {
+    opacity: 1;
+}
+/* Стили для математических формул */ 
+.math { text-align: center; margin: 20px 0; } mjx-container { outline: none; } </style>
+</head>
+
+<body>
+
+<h2 id="_1">От нас скрывали</h2>
+<img src='Sverchok_VS_Grasshopper.html.files/smile_docs.png'>
+<p>Мало кто знает, но существует аналог Grasshopper (Rhinocerros) и Dinamo. Этот инструмент развивается уже более 10 лет. И в отличие от упомянутых, имеет полностью открытый исходный код. </p>
+<p>Представляю вам <strong>СВеРЧОК (Система векторного рабочего черчения и объёмного конструирования)</strong>. Сверчок - мощный инструмент для архитектора, позволяющий визуально программировать узлами. </p>
+<p>Не погрешу против истины, что: "Кто понимает ценность свободного программного обеспечения, тот компьютерно грамотный". </p>
+<h3 id="sverchok-blender">Ключевые возможности Sverchok (Blender)</h3>
+<p>Sverchok — это не просто надстройка для работы с сетками (mesh), а полноценная параметрическая CAD-система, узлы которой генерируют и оперируют различными типами геометрических данных.</p>
+
+<img width=800 src='Sverchok_VS_Grasshopper.html.files/help00.png'>
+
+<h4 id="1">1. Типы генерируемой геометрии</h4>
+<p>Вопреки распространенному мнению, Sverchok работает не только с полигональными сетками. В его основе лежат различные типы данных: 
+<ul>
+<li><strong>Сетки:</strong> Конечно сами пресловутые сетки (вершины, рёбра, полигоны) и обширный арсенал узлов для работы с ними, анализ, модификация, прочее.</li>
+
+<li><strong>Матрицы:</strong> Матрица - это аналог Plane грасхопера, но по сути это большая математическая концепция, управляющая геометрией. * </li>
+<li><strong>Кривые (Curves):</strong> Поддерживаются различные виды сплайнов, включая NURBS, Catmull-Rom и Безье . Есть узлы для их создания, интерполяции, сопряжения (fillet) и оценки. * </li>
+<li><strong>Поверхности (Surfaces):</strong> Инструментарий включает построение поверхностей по сетке кривых (NURBS, бирациональные поверхности Coons Patch, поверхности по сечениям и прочее). * </li>
+<li><strong>Твердотельные объекты (Solids):</strong> Эта функциональность реализована через интеграцию с библиотекой FreeCAD. Это позволяет выполнять булевы операции (CSG), создавать сечения и использовать ядро геометрического моделирования OpenCASCADE Technology (OCCT) прямо из нодов Sverchok. * </li>
+<li><strong>Поля (Fields):</strong> Поддержка скалярных и векторных полей для более сложных симуляций и анализа данных.</li>
+</ul>
+</p>
+
+
+<img width=800 src='Sverchok_VS_Grasshopper.html.files/help01.png'>
+<img width=800 src='Sverchok_VS_Grasshopper.html.files/help02.png'>
+<img width=800 src='Sverchok_VS_Grasshopper.html.files/help03.png'>
+
+<h4 id="2">2. Ключевые возможности и философии</h4>
+<ul>
+<li><strong>Самодостаточность и интеграция:</strong> Sverchok позволяет строить алгоритмы, напрямую используя математическое описание кривых, сеток, полей и поверхностей. Интеграция с FreeCAD добавляет мощь профессионального CAD-ядра. </li>
+<li><strong>Гибридный подход:</strong> Пользователь может свободно смешивать в одном графе высокоточные NURBS-поверхности (из узлов Sverchok или FreeCAD) и полигональные сетки (из Blender API или Bmesh), выбирая оптимальный инструмент для каждой задачи. </li>
+<li><strong>Обмен данными (Brep/NURBS/IFC):</strong> Возможность обмениваться данными с профессиональными BIM и CAD форматами, такими как IFC, DXF, SVG и BREP, через интеграцию с FreeCAD, ifcopenshell, собственным кодом, написанным командой Сверчка (в том числе простой экспорт ifc без сторонних библиотек). </li>
+<li><strong>Скриптинг:</strong> Как и в Grasshopper, есть возможность писать собственные узлы на Python, но в отличие от Grasshopper, это не добровольное рабство в пользу Макнил и Риноцерроза, но свободный инструмент, который запускается под свободным инструментом Блендер и в свободной среде Линукс. Хотя и работает под Виндовс и Макосью так же хорошо. </li>
+</ul>
+
+<img width=800 src='Sverchok_VS_Grasshopper.html.files/help03_solids.png'>
+<img width=800 src='Sverchok_VS_Grasshopper.html.files/help04_solids.png'/>
+
+<h3 id="grasshopper-rhino">Ключевые возможности Grasshopper (Rhino)</h3>
+<ol>
+<li><strong>Родная NURBS-среда:</strong> Grasshopper изначально построен на ядре геометрического моделирования Rhino (NURBS). Это его "родная" геометрия, и все операции с кривыми и поверхностями являются нативными, а не реализованными через внешние библиотеки. Это обеспечивает высокую точность и предсказуемость, особенно на этапе моделирования.</li>
+<li><strong>Экосистема профессионального инжиниринга:</strong> Благодаря тесной интеграции с Rhino, Grasshopper имеет огромную экосистему плагинов, ориентированных на конкретные инженерные расчеты (структурный анализ, МКЭ, анализ освещенности, оптимизация формы), которые часто работают напрямую с NURBS-геометрией без промежуточной конвертации в mesh.</li>
+<li><strong>"Запекание" (Baking):</strong> Процесс финализации геометрии в Grasshopper подразумевает её перенос в статичные объекты Rhino. В Sverchok, работающем внутри Blender, этот процесс может быть более гибким благодаря глубокой интеграции с объектной моделью Blender (bpy), но концептуально задача та же.</li>
+</ol>
+
+<img width=800 src='Sverchok_VS_Grasshopper.html.files/help04_surf.png'>
+<img width=800 src='Sverchok_VS_Grasshopper.html.files/surface_01.png'>
+<img width=800 src='Sverchok_VS_Grasshopper.html.files/surface_02.png'>
+
+<h3 id="_2">Сравнительная таблица (типы данных)</h3>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Критерий</th>
+<th style="text-align: left;">Grasshopper (Rhino)</th>
+<th style="text-align: left;">Sverchok (Blender)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Базовая геометрия</strong></td>
+<td style="text-align: left;">Нативные <strong>NURBS</strong>-кривые и поверхности (ядро Rhino).</td>
+<td style="text-align: left;"><strong>Гибридная</strong>: Нативные NURBS-кривые/поверхности (собственные узлы) + <strong>Твердотельные объекты</strong> через интеграцию с <strong>FreeCAD</strong> + Полигональные сетки.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Экосистема</strong></td>
+<td style="text-align: left;">Огромное количество коммерческих и бесплатных плагинов для узкоспециализированного инжиниринга (структурный, климатический, оптимизация).</td>
+<td style="text-align: left;">Свободные коммерческие плагины, + глубокая интеграция с <strong>Blender API</strong> и <strong>FreeCAD</strong> открывает доступ к миру open-source библиотек (OpenCASCADE, SciPy и др.).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Рабочий процесс</strong></td>
+<td style="text-align: left;">Тесная, но дискретная связь с Rhino. Геометрия "запекается" для дальнейшего использования.</td>
+<td style="text-align: left;">Глубокая интеграция с Blender. Параметрические объекты могут теснее взаимодействовать со сценой Blender (материалы, освещение, частицы).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Основная специализация</strong></td>
+<td style="text-align: left;">Архитектурное и инженерное проектирование, требующее точных NURBS-поверхностей и доступа к профессиональным расчетным пакетам.</td>
+<td style="text-align: left;">Архитектурное проектирование, позволяюее гибридный подход (mesh + CAD) и глубокую интеграцию с инструментарием 3D-графики (рендеринг, анимация), и также вывод чертежей и моделей в BIM/CAD среды.</td>
+</tr>
+</tbody>
+</table>
+
+<img width=800 src='Sverchok_VS_Grasshopper.html.files/help51_Architecture.png'>
+<img width=800 src='Sverchok_VS_Grasshopper.html.files/help53_Architecture.png'>
+<img width=800 src='Sverchok_VS_Grasshopper.html.files/help54_Architecture.png'>
+<img width=800 src='Sverchok_VS_Grasshopper.html.files/help56_Architecture.png'>
+
+<h3 id="grasshopper-vs-sverchok"><strong>Сравнительная таблица экосистем расширений: Grasshopper vs Sverchok</strong></h3>
+
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Категория / Расширение</th>
+<th style="text-align: left;">Grasshopper (Rhino)</th>
+<th style="text-align: left;">Sverchok (Blender)</th>
+</tr></thead><tbody><tr><td style="text-align: left;"><strong>Базовые и вспомогательные</strong></td>
+<td style="text-align: left;">Огромное количество утилит: <strong>Human</strong>, <strong>LunchBox</strong>, <strong>Elefront</strong> (управление данными и геометрией), <strong>GhPython</strong> (скриптинг на Python).</td>
+<td style="text-align: left;"><strong>Extra</strong> (доп. утилиты), <strong>bmesh</strong> (доступ к API полигонального моделирования Blender).</td></tr><tr><td style="text-align: left;"><strong>Анализ окружающей среды</strong></td>
+<td style="text-align: left;"><strong>Ladybug Tools</strong> — мощнейший инструмент для анализа погодных данных (температура, ветер, влажность) на основе EnergyPlus Weather данных.</td>
+<td style="text-align: left;"><strong>Ladybug sverchok</strong> — порт для Sverchok. Позволяет проводить аналогичный анализ, но глубже интегрирован в среду Blender для визуализации результатов.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>BIM и IFC (OpenBIM)</strong></td>
+<td style="text-align: left;"><strong>IfcHopperShell</strong> (на базе IfcOpenShell) — позволяет создавать IFC-совместимую геометрию (например, IfcExtrudedAreaSolid) прямо в Grasshopper . Также <strong>GeomGym GSA</strong> для конвертации IFC в аналитические модели .</td>
+<td style="text-align: left;"><strong>Sverchok-IFC</strong> (на базе IfcOpenShell/Bonsai) — глубокая интеграция с BlenderBIM. Позволяет не только создавать, но и читать/изменять IFC-модели, используя параметрические возможности Sverchok.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Работа с облаками точек</strong></td>
+<td style="text-align: left;">Ограничена. Обычно требует написания скриптов на C# или Python. Использование <strong>Open3D</strong> затруднено из-за IronPython (не поддерживает стандартные библиотеки Python) .</td>
+<td style="text-align: left;"><strong>Open3D</strong> — полноценный порт или интеграция. Благодаря нативному Python в Blender, Sverchok может напрямую использовать мощные алгоритмы Open3D для обработки облаков точек и mesh (регистрация, фильтрация, реконструкция).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Инженерный анализ и расчеты</strong></td>
+<td style="text-align: left;"><strong>IDEA StatiCa</strong> (расчет стальных узлов и соединений) , <strong>Oasys GSA</strong> (структурный анализ) , <strong>Karamba3D</strong> (МКЭ), <strong>RFEM</strong> интеграция .</td>
+<td style="text-align: left;"><strong>FreeCAD</strong> ядро — уже обсуждали. Менее специализированные, но гибкие инструменты на основе SciPy/NumPy, а также вывод геометрии для работы в других программах типа Лира-САПР.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Специализированные инструменты</strong>
+</td>
+<td style="text-align: left;"><strong>Dendro</strong> (вумерное моделирование на OpenVDB) , <strong>IG-Mesh</strong> (продвинутая обработка mesh) , <strong>Groundhog</strong> (ландшафтная архитектура).</td>
+<td style="text-align: left;"><strong>Megapolis</strong> — изначально создавался для Sverchok. Инструментарий для генерации городов, дорожных сетей и кварталов на основе параметрических правил.</td>
+</tr>
+</tbody>
+</table>
+
+<img width=800 src='Sverchok_VS_Grasshopper.html.files/help68_Design.png'>
+<img width=800 src='Sverchok_VS_Grasshopper.html.files/surface_analize.png'>
+
+<h3 id="_3"><strong>Ключевые выводы из таблицы</strong></h3>
+<ol>
+<li>
+<p><strong>Происхождение экосистемы:</strong> Экосистема Grasshopper — это классическая "платная" или "профессиональная" индустрия, где плагины часто являются коммерческими продуктами, интегрированными в крупные инженерные компании (IDEA StatiCa, Oasys). Экосистема Sverchok глубоко интегрирована в open-source мир Blender и Python, что дает доступ к таким библиотекам, как Open3D и IfcOpenShell, более нативно.</p>
+</li>
+<li>
+<p><strong>BIM и IFC:</strong> Оба инструмента движутся в сторону OpenBIM через IfcOpenShell. Однако <strong>Sverchok-IFC</strong> в связке с <strong>Bonsai</strong> (бывший BlenderBIM) предлагает, возможно, более глубокую двустороннюю связь, так как Blender сам становится BIM-редактором. Grasshopper же чаще используется для генерации геометрии с последующим экспортом в IFC. Тем не менее, в Сверчке есть и собственный быстрый экспорт IFC, который часто даёт минимально необходимый результат. </p>
+</li>
+<li>
+<p><strong>Работа с данными реального мира (Open3D, Ladybug):</strong> В Sverchok есть <strong>нативная поддержка Python</strong>, что и приводит часто к более тесной интеграции. В то время как пользователи Grasshopper вынуждены писать сложные обходные пути на C# для работы с Open3D, Sverchok может напрямую использовать эту библиотеку. С Ladybug ситуация обратная: это "родной" инструмент для Grasshopper, а в Sverchok он является портом, но с лучшей визуализацией в Blender. Кроме того, более развитая узловая система дляч блендера, эксплуатирующая ladybug под названием <strong>VI-Suite</strong>, что работает в той же экосистеме, что и <strong>Bonsai</strong> и <strong>Sverchok</strong> - в <strong>Blender</strong>. </p>
+</li>
+<li>
+<p><strong>Городское планирование:</strong> Оба инструмента имеют специализированные расширения. <strong>Megapolis</strong> является ярким примером инструмента, который, возникнув в экосистеме Sverchok, предоставляет возможности, сравнимые с аналогичными плагинами для Grasshopper.</p>
+</li>
+</ol>
+
+<img width=800 src='Sverchok_VS_Grasshopper.html.files/help37_CNC.png'>
+<img width=800 src='Sverchok_VS_Grasshopper.html.files/help46_CNC.png'>
+
+<h3 id="_4"><strong>Итоговое резюме</strong></h3>
+<ul>
+<li><strong>Grasshopper</strong> опирается на единое коммерческое NURBS-ядро Rhino и огромную индустрию плагинов вокруг него. Доминирует в сфере профессионального инженерного анализа (структурные расчеты, стальные конструкции), где требуются сертифицированные и коммерчески поддерживаемые инструменты. Его экосистема богата, но часто требует покупки лицензий. </li>
+<li><strong>Sverchok</strong> предлагает гибридный подход, сочетая собственные свободные разработки с мощью open-source библиотек (FreeCAD/OCCT), и глубоко интегрирован в среду 3D-моделлинга и рендеринга Blender. Выигрывает за счет глубокой интеграции с open-source экосистемой Python. Это делает его невероятно гибким инструментом для задач, требующих использования передовых научных библиотек (Open3D, IfcOpenShell, SciPy), и обеспечивает более плавный рабочий процесс с визуализацией в Blender.</li>
+</ul>
+<p><strong>Сверчок</strong> вполне пригоден для работы, выпуска чертежей, моделей, создания фасадов, скульптур, мебели, ювелирных изделий.</p>
+</body>
+</html>
+
+
+
+
+
+
+
