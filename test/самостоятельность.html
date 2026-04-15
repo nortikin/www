@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Тест на Самостоятельность</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-color: #f4f6f8;
+            --card-bg: #ffffff;
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --text-main: #1f2937;
+            --text-secondary: #6b7280;
+            --radius: 20px;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            color: var(--text-main);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+            position: relative;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 30px 28px 38px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: all 0.2s ease;
+            position: relative;
+            min-height: 420px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .step {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .step.active {
+            display: flex;
+            gap: 28px;
+        }
+
+        h1, h2 {
+            margin: 0;
+            font-weight: 600;
+            line-height: 1.3;
+            text-align: center;
+        }
+
+        .question-text {
+            font-size: 1.35rem;
+            text-align: center;
+            line-height: 1.45;
+            font-weight: 500;
+            margin: 10px 0 5px;
+            color: #111827;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        .option-btn {
+            border: none;
+            background-color: #f1f5f9;
+            color: var(--text-main);
+            padding: 16px 12px;
+            border-radius: 60px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+            text-align: center;
+            font-weight: 500;
+            font-family: inherit;
+            border: 1px solid #e2e8f0;
+            letter-spacing: 0.3px;
+        }
+
+        .option-btn:hover {
+            background-color: #e6edf5;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px -8px rgba(0,0,0,0.15);
+        }
+
+        .option-btn:active {
+            transform: translateY(0);
+        }
+
+        .result-box {
+            background: #eff6ff;
+            padding: 28px 20px;
+            border-radius: 28px;
+            text-align: center;
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            margin-top: 12px;
+        }
+
+        .result-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+            display: block;
+            color: #1e40af;
+            font-weight: 600;
+        }
+
+        .result-score {
+            font-size: 3.4rem;
+            font-weight: 800;
+            margin: 8px 0;
+            line-height: 1;
+        }
+
+        .result-desc {
+            font-size: 1.05rem;
+            line-height: 1.5;
+            margin-top: 12px;
+            color: #1f2f4f;
+        }
+
+        .progress-container {
+            position: absolute;
+            top: -18px;
+            left: 20px;
+            right: 20px;
+            width: calc(100% - 40px);
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 99px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            border-radius: 99px;
+            transition: width 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .start-btn {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            font-size: 1.2rem;
+            padding: 16px;
+            border-radius: 50px;
+            margin-top: 20px;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(59,130,246,0.3);
+        }
+
+        .start-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(0.98);
+        }
+
+        .small-note {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-top: 24px;
+        }
+
+        .reset-btn {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .reset-btn:hover {
+            background: #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="progress-container" id="progressContainer" style="display: none;">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="card" id="mainCard">
+        <!-- Стартовый экран -->
+        <div id="step-start" class="step active" style="justify-content: center; text-align: center;">
+            <div>
+                <h1 style="margin-bottom: 16px;">🧸 Опросник на самостоятельность</h1>
+                <p style="color: var(--text-secondary); font-size: 1.05rem; margin-bottom: 20px;">
+                    Оцените, насколько вам свойственны реакции, близкие к зависимой позиции.
+                </p>
+                <p style="background: #f8fafc; padding: 14px; border-radius: 20px; font-size: 0.9rem;">
+                    📌 15 утверждений. Честность поможет увидеть реальную картину.
+                </p>
+            </div>
+            <button class="start-btn" id="startTestBtn">▶ Начать тест</button>
+            <div class="small-note">✓ Без регистрации<br>✓ Анонимно</div>
+        </div>
+
+        <!-- Контейнер для динамических вопросов -->
+        <div id="step-questions" style="width: 100%;"></div>
+    </div>
+</div>
+
+<script>
+    // ==================== ВОПРОСЫ ====================
+    const questions = [
+        "Если у меня возникают проблемы, я ищу виновных во внешнем мире (руководство, погода), а не анализирую свои действия.",
+        "Я часто жалуюсь на то, как сложно сейчас жить, но почти никогда не предпринимаю активных шагов для изменения ситуации.",
+        "Когда мои планы рушатся, я чувствую себя беспомощным ребенком, которому нужна помощь другого человека.",
+        "В конфликтной ситуации я мгновенно перехожу на эмоции, забывая о логике и фактах.",
+        "Я испытываю постоянную потребность в одобрении других; без похвалы чувствую себя «плохим».",
+        "Страх ошибки парализует меня сильнее желания что-то достичь; я предпочитаю ничего не делать.",
+        "Я жду, пока кто-то другой (партнер, родитель) примет решение за меня («спасите», «решите»).",
+        "Мои личные границы размыты: я легко позволяю другим вмешиваться в мою жизнь.",
+        "Я склонен идеализировать лидеров и авторитетные фигуры, надеясь на их безусловную заботу.",
+        "Мне кажется, что окружающие настроены на мое поражение без веских причин.",
+        "Я часто использую манипуляции в общении, чтобы избежать ответственности или получить выгоду.",
+        "Сложности в отношениях возникают из-за моего страха одиночества и зависимости от партнера.",
+        "Я часто сбегаю от реальности в фантазии, чтобы не сталкиваться с требованиями жизни.",
+        "Критика воспринимается мною как личная атака на личность.",
+        "Я затрудняюсь планировать будущее самостоятельно, предпочитая следовать чужим сценариям."
+    ];
+
+    const options = [
+        { label: "❌ Совершенно нет", val: 1 },
+        { label: "🤔 Иногда бывает", val: 2 },
+        { label: "✅ Да, это про меня", val: 3 }
+    ];
+
+    // Состояние
+    let currentQuestionIndex = 0;    // 0-based
+    let totalScore = 0;
+    let testActive = false;
+
+    // DOM элементы
+    const startStepDiv = document.getElementById('step-start');
+    const questionsContainer = document.getElementById('step-questions');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressBar = document.getElementById('progressBar');
+
+    // Храним ссылки на созданные DOM-блоки вопросов
+    let questionElements = [];
+
+    // ========== ИНИЦИАЛИЗАЦИЯ: создаем все вопросы один раз ==========
+    function buildQuestionsDOM() {
+        questionsContainer.innerHTML = ''; // очищаем
+        questionElements = [];
+
+        questions.forEach((qText, idx) => {
+            const stepDiv = document.createElement('div');
+            stepDiv.className = 'step';
+            stepDiv.setAttribute('data-qidx', idx);
+            stepDiv.id = `question-step-${idx}`;
+
+            // Контейнер текста
+            const textDiv = document.createElement('div');
+            textDiv.className = 'question-text';
+            textDiv.innerText = qText;
+
+            // Группа кнопок
+            const btnGroup = document.createElement('div');
+            btnGroup.className = 'btn-group';
+
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.innerText = `${opt.label}  (+${opt.val})`;
+                btn.classList.add('option-btn');
+                // сохраняем значения
+                btn.dataset.val = opt.val;
+                btn.dataset.qidx = idx;
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (!testActive) return;
+                    // Блокируем повторный клик на этом вопросе
+                    if (btnGroup.classList.contains('answered')) return;
+                    btnGroup.classList.add('answered');
+
+                    const selectedVal = parseInt(btn.dataset.val);
+                    totalScore += selectedVal;
+
+                    // Визуальный фидбек: затемняем другие кнопки и подсвечиваем выбранную
+                    const allBtns = btnGroup.querySelectorAll('.option-btn');
+                    allBtns.forEach(b => {
+                        b.style.opacity = '0.6';
+                        b.style.transition = '0.2s';
+                    });
+                    btn.style.opacity = '1';
+                    btn.style.backgroundColor = '#dbeafe';
+                    btn.style.borderColor = '#3b82f6';
+                    btn.style.fontWeight = 'bold';
+
+                    // Небольшая задержка для плавности перехода
+                    setTimeout(() => {
+                        goToNextQuestion(idx);
+                    }, 320);
+                });
+                btnGroup.appendChild(btn);
+            });
+
+            stepDiv.appendChild(textDiv);
+            stepDiv.appendChild(btnGroup);
+            questionsContainer.appendChild(stepDiv);
+            questionElements.push(stepDiv);
+        });
+    }
+
+    // Функция перехода к следующему вопросу
+    function goToNextQuestion(currentIdx) {
+        if (!testActive) return;
+
+        // Скрываем текущий активный вопрос
+        const currentActive = document.querySelector('.step.active');
+        if (currentActive) currentActive.classList.remove('active');
+
+        // Увеличиваем индекс
+        const nextIndex = currentIdx + 1;
+
+        if (nextIndex < questions.length) {
+            // Показываем следующий вопрос
+            const nextQuestionDiv = questionElements[nextIndex];
+            if (nextQuestionDiv) {
+                nextQuestionDiv.classList.add('active');
+                currentQuestionIndex = nextIndex;
+                updateProgressBar();
+            } else {
+                // fallback
+                finishTest();
+            }
+        } else {
+            // Тест завершен
+            finishTest();
+        }
+    }
+
+    function updateProgressBar() {
+        if (!testActive) return;
+        // процент на основе текущего индекса (сколько отвечено)
+        // но правильнее: сколько вопросов ЗАВЕРШЕНО = currentQuestionIndex (т.к. только что перешли на следующий)
+        // на момент вызова goToNextQuestion мы уже ответили на currentIdx, и currentQuestionIndex теперь равен nextIndex
+        // если мы только что ответили на последний, то finishTest вызывается до update
+        let answeredCount = currentQuestionIndex;
+        if (answeredCount >= questions.length) answeredCount = questions.length;
+        const percent = (answeredCount / questions.length) * 100;
+        progressBar.style.width = `${percent}%`;
+    }
+
+    function finishTest() {
+        testActive = false;
+
+        // Скрываем активный вопрос (если есть)
+        const activeQ = document.querySelector('.step.active');
+        if (activeQ && activeQ.id !== 'step-start') {
+            activeQ.classList.remove('active');
+        }
+
+        // Прогресс на 100%
+        progressBar.style.width = '100%';
+
+        // Готовим итоговый блок
+        const finalBlock = document.createElement('div');
+        finalBlock.className = 'step active';
+        finalBlock.id = 'result-final';
+
+        let title = "";
+        let description = "";
+        let scoreColor = "#3b82f6";
+
+        if (totalScore <= 15) {
+            title = "🌟 Высокая зрелость";
+            description = "0–15 баллов: Вы принимаете ответственность, управляете эмоциями. Встречаются лишь временные реакции стресса. Отличный уровень автономности.";
+            scoreColor = "#059669";
+        } else if (totalScore <= 25) {
+            title = "🌀 Умеренная инфантильность";
+            description = "16–25 баллов: Нормотипическая вариация. Может проявляться при усталости или в окружении сильных покровителей. Стоит иногда брать инициативу в свои руки.";
+            scoreColor = "#d97706";
+        } else if (totalScore <= 35) {
+            title = "⚠️ Высокий уровень инфантильности";
+            description = "26–35 баллов: Заметные трудности в карьере и жизни из-за зависимости от мнения других или избегания ответственности. Работа над внутренним взрослым принесёт свободу.";
+            scoreColor = "#dc2626";
+        } else {
+            title = "🧸 Патологическая инфантильность";
+            description = "36+ баллов: Жизнь хаотична и зависима от обстоятельств. Сильно выраженная псевдовзрослость. Рекомендуется поддержка психолога для роста самостоятельности.";
+            scoreColor = "#7f1d1d";
+        }
+
+        finalBlock.innerHTML = `
+            <div style="text-align: center; margin-bottom: 8px;">
+                <h2 style="margin-bottom: 16px;">📋 Результат теста</h2>
+                <div class="result-box">
+                    <span class="result-title">Общая сумма баллов</span>
+                    <div class="result-score" style="color: ${scoreColor}">${totalScore}</div>
+                    <div class="result-desc">
+                        <strong>${title}</strong><br><br>
+                        ${description}
+                    </div>
+                </div>
+                <button id="restartBtn" class="reset-btn" style="margin-top: 28px;">🔄 Пройти заново</button>
+            </div>
+        `;
+
+        // Удаляем все старые step-блоки кроме стартового (но стартовый скроем), вставляем результат
+        // Скрываем стартовый экран
+        startStepDiv.classList.remove('active');
+        // Удаляем все созданные вопросы из DOM? Оставим, но они неактивны
+        // Чтобы результат появился, нужно добавить в контейнер карточки
+        const mainCard = document.getElementById('mainCard');
+        // Удаляем предыдущий результат, если был (чтоб не дублировать)
+        const oldResult = document.getElementById('result-final');
+        if (oldResult) oldResult.remove();
+
+        // Добавляем финальный блок в карточку
+        mainCard.appendChild(finalBlock);
+
+        // Кнопка перезапуска
+        const restartBtn = document.getElementById('restartBtn');
+        if (restartBtn) {
+            restartBtn.addEventListener('click', (e) => {
+                resetTest();
+            });
+        }
+
+        // Дополнительно скрываем контейнер вопросов (визуально чисто)
+        questionsContainer.style.display = 'none';
+    }
+
+    function resetTest() {
+        // Сброс всех глобальных переменных
+        totalScore = 0;
+        currentQuestionIndex = 0;
+        testActive = false;
+
+        // Удалить финальный экран если есть
+        const resultFinal = document.getElementById('result-final');
+        if (resultFinal) resultFinal.remove();
+
+        // Показать снова контейнер вопросов
+        questionsContainer.style.display = 'block';
+
+        // Пересоздаём вопросы (чистые, без ответов)
+        buildQuestionsDOM();
+
+        // Сброс прогресс бара
+        progressBar.style.width = '0%';
+        progressContainer.style.display = 'none';
+
+        // Скрываем все вопросы
+        questionElements.forEach(el => el.classList.remove('active'));
+
+        // Показываем стартовый экран
+        startStepDiv.classList.add('active');
+
+        // Убираем возможные блокировки кнопок внутри questionElements (удаление старых обработчиков не требуется,
+        // т.к. buildQuestionsDOM создает новые кнопки с новыми слушателями)
+
+        // Убираем стили
+        const anyActive = document.querySelector('.step.active');
+        if (anyActive && anyActive.id !== 'step-start') anyActive.classList.remove('active');
+    }
+
+    function startTest() {
+        if (testActive) return;
+
+        // Сбрасываем перед стартом (на случай повторного запуска)
+        totalScore = 0;
+        currentQuestionIndex = 0;
+
+        // Пересоздаем вопросы с нуля (чтобы все кнопки были свежими, без серых состояний)
+        buildQuestionsDOM();
+
+        // Скрываем стартовый экран
+        startStepDiv.classList.remove('active');
+
+        // Показываем прогресс-бар
+        progressContainer.style.display = 'block';
+        progressBar.style.width = '0%';
+
+        // Делаем видимым контейнер вопросов
+        questionsContainer.style.display = 'block';
+
+        // Активируем первый вопрос
+        if (questionElements.length > 0) {
+            questionElements[0].classList.add('active');
+            currentQuestionIndex = 0;
+            testActive = true;
+            updateProgressBar();
+        } else {
+            console.error("Вопросы не созданы");
+            // fallback
+            buildQuestionsDOM();
+            if (questionElements.length) {
+                questionElements[0].classList.add('active');
+                testActive = true;
+                updateProgressBar();
+            }
+        }
+    }
+
+    // Привязка событий и инициализация
+    document.addEventListener('DOMContentLoaded', () => {
+        // Строим изначальные вопросы (скрытые)
+        buildQuestionsDOM();
+        // Изначально контейнер вопросов виден? нет, но он есть, скроем его пока (чтобы не мелькал)
+        questionsContainer.style.display = 'block';
+        // Скрываем все вопросы, они не активны
+        questionElements.forEach(el => el.classList.remove('active'));
+        // Скрываем прогресс бар сначала
+        progressContainer.style.display = 'none';
+        // Стартовый экран активен
+        startStepDiv.classList.add('active');
+
+        // Кнопка старта
+        const startBtn = document.getElementById('startTestBtn');
+        if (startBtn) {
+            startBtn.addEventListener('click', () => {
+                startTest();
+            });
+        }
+
+        testActive = false;
+
+        // Убеждаемся что нет "мигающего курсора" и пустого прямоугольника
+        // Изначально никакой вопрос не активен, карточка выглядит как стартовый экран.
+    });
+
+    // Небольшой фикс для красивого отображения после рестарта: удаляем возможные артефакты
+    window.resetTest = resetTest; // отладка, но необязательно
+</script>
+</body>
+</html>
