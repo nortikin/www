@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест: Sverchok — Структуры данных, геометрия и кривые</title>
+    <style>
+        :root {
+            --primary-color: #1e466e;
+            --accent-color: #2c8c6e;
+            --bg-color: #eef2f5;
+            --card-bg: #ffffff;
+            --text-color: #1f2d3d;
+            --border-light: #dce4ec;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            margin: 0;
+            padding: 24px 16px;
+        }
+
+        .container {
+            max-width: 880px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            padding: 32px 40px;
+            border-radius: 28px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            font-size: 1.9rem;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #4a627a;
+            margin-bottom: 32px;
+            font-size: 1rem;
+            border-bottom: 2px solid var(--border-light);
+            padding-bottom: 16px;
+        }
+
+        .badge-info {
+            background: #e9f0f5;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+        }
+
+        .question-block {
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .question-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 14px;
+            color: var(--primary-color);
+            background: #f8fafc;
+            padding: 8px 12px;
+            border-radius: 14px;
+        }
+
+        .options label {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 14px;
+            transition: background 0.2s ease;
+            font-weight: 450;
+        }
+
+        .options label:hover {
+            background-color: #f0f9fa;
+        }
+
+        .options input[type="radio"] {
+            margin-top: 4px;
+            accent-color: var(--accent-color);
+            flex-shrink: 0;
+        }
+
+        button#submit-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 60px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s;
+            margin-top: 20px;
+            letter-spacing: 0.3px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        button#submit-btn:hover {
+            background-color: #1f6e56;
+            transform: translateY(-1px);
+        }
+
+        #result {
+            margin-top: 35px;
+            padding: 20px 24px;
+            background-color: #eef7f2;
+            border-left: 6px solid var(--accent-color);
+            border-radius: 20px;
+            display: none;
+            font-size: 1rem;
+        }
+
+        .explanation {
+            margin-top: 12px;
+            font-size: 0.9rem;
+            background: #fdfdf5;
+            padding: 10px 14px;
+            border-radius: 16px;
+            color: #2c3e55;
+            border: 1px solid #e9ecef;
+        }
+
+        .correct {
+            color: #1e7b48;
+            font-weight: 700;
+        }
+
+        .incorrect {
+            color: #bc4e2c;
+            font-weight: 700;
+        }
+
+        .result-stats {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            .options label {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📐 Sverchok: структуры данных, геометрия и кривые</h1>
+    <div class="subtitle">
+        🧠 Проверка знаний по документации: Data structure, Intro to geometry, Curves, Surfaces, NURBS и векторные поля
+    </div>
+
+    <form id="quiz-form">
+        <div id="questions-container"></div>
+        <button type="button" id="submit-btn">📊 Показать результаты</button>
+    </form>
+    <div id="result"></div>
+</div>
+
+<script>
+    // ============================================================
+    // Тест основан на содержании официальной документации Sverchok:
+    // Структуры данных (матрешки/уровни вложенности), основы геометрии,
+    // кривые (Bezier, NURBS), поверхности, скалярные/векторные поля, solids.
+    // ============================================================
+    const questions = [
+        {
+            id: 1,
+            text: "В документации Sverchok ключевая концепция работы с данными — «матрешка» (nesting). Что означает уровень вложенности «уровень 2» (level 2) для списка вершин?",
+            options: [
+                "Список вершин, где каждая вершина — это вектор (x,y,z) – простой плоский список.",
+                "Список полигонов, каждый полигон — список вершин, а сами вершины — векторы: форма [ [ [x,y,z], ... ], ... ]",
+                "Список объектов, где каждый объект содержит целую сетку вершин и граней.",
+                "Просто список из трех чисел: [x, y, z] без вложенности."
+            ],
+            correct: 1,
+            explanation: "Уровень 2 в Sverchok: список полигонов/кривых, где каждый элемент — список точек. Например, несколько независимых кривых или полилиний."
+        },
+        {
+            id: 2,
+            text: "Согласно разделу «Introduction to geometry» в Sverchok, что из перечисленного является фундаментальным геометрическим примитивом для построения сложных форм?",
+            options: [
+                "Только NURBS-поверхности.",
+                "Вершина (точка), ребро, полигон (грань).",
+                "Воксели и скалярные поля.",
+                "Исключительно векторные поля."
+            ],
+            correct: 1,
+            explanation: "Базовые элементы: вершины, рёбра, полигоны / грани — основа полигональной геометрии в Sverchok."
+        },
+        {
+            id: 3,
+            text: "В документации про работу с кривыми (Curves) какой тип кривой поддерживает точное математическое представление NURBS и позволяет менять степень, веса контрольных точек?",
+            options: [
+                "Только кривые Безье с фиксированным числом сегментов.",
+                "NURBS-кривые (Non-Uniform Rational B-Splines).",
+                "Только полилинии.",
+                "Кривые Эрмита."
+            ],
+            correct: 1,
+            explanation: "NURBS — мощный инструмент для кривых и поверхностей, обеспечивает гибкость за счёт весов и узлов."
+        },
+        {
+            id: 4,
+            text: "Согласно разделу «Data structure», что означает «level 0» для списка геометрических данных в Sverchok?",
+            options: [
+                "Отдельный вектор или значение (число, точка), не обернутое в дополнительный список.",
+                "Список, содержащий несколько объектов (мешей).",
+                "Трёхмерная матрица точек.",
+                "Дерево (tree) с множеством веток."
+            ],
+            correct: 0,
+            explanation: "Уровень 0 — это атомарный элемент данных, например, одна точка [x,y,z] или одно число, без вложенности."
+        },
+        {
+            id: 5,
+            text: "В контексте темы «Surface» (поверхности) в Sverchok, какая структура используется для создания гладких органических форм на основе NURBS-представления?",
+            options: [
+                "Полигональная сетка, созданная вручную.",
+                "NURBS-поверхность, заданная контрольными точками в U и V направлениях.",
+                "Набор изолированных кривых без связности.",
+                "Воксельная сетка."
+            ],
+            correct: 1,
+            explanation: "NURBS-поверхность — обобщение NURBS-кривых на два параметра (u,v), основа для CAD и процедурной геометрии."
+        },
+        {
+            id: 6,
+            text: "Какая ключевая характеристика «скалярного поля» (Scalar Fields) в узлах Sverchok?",
+            options: [
+                "В каждой точке пространства определено векторное направление и сила.",
+                "В каждой точке пространства задано одно числовое значение (например, плотность, температура).",
+                "Содержит только информацию о цвете.",
+                "Определяет исключительно движение частиц."
+            ],
+            correct: 1,
+            explanation: "Скалярное поле сопоставляет каждой точке пространства скаляр (число). Используется для изоповерхностей, генерации ландшафтов."
+        },
+        {
+            id: 7,
+            text: "В документации по «Vector Fields» (векторные поля) какое применение наиболее характерно для нодов Sverchok?",
+            options: [
+                "Рендеринг финального изображения.",
+                "Визуализация направления потока, деформация геометрии вдоль векторов, траектории частиц.",
+                "Только расчёт освещения.",
+                "Управление анимацией шейдеров."
+            ],
+            correct: 1,
+            explanation: "Векторные поля определяют направление и величину в пространстве → можно искривлять сетки, силовые линии."
+        },
+        {
+            id: 8,
+            text: "Как в Sverchok трактуется понятие «Solid» (твёрдое тело) в сравнении с граничной поверхностью (mesh)?",
+            options: [
+                "Solid — это всегда только куб или сфера.",
+                "Solid подразумевает замкнутую водонепроницаемую геометрию, которая определяет объём.",
+                "Любая сетка с дырками считается solid.",
+                "Solid отличается только материалом."
+            ],
+            correct: 1,
+            explanation: "Solid — это замкнутая геометрия без граничных рёбер, определяющая внутренний объём (для булевых операций, 3d-печати)."
+        },
+        {
+            id: 9,
+            text: "В разделе «NURBS: Curves and Surfaces» документации, что означает параметр «degree» (степень) NURBS-кривой?",
+            options: [
+                "Количество контрольных точек.",
+                "Степень полинома, который описывает кривую; влияет на гладкость и локальный контроль.",
+                "Гамма-коррекцию кривой.",
+                "Число сегментов визуализации."
+            ],
+            correct: 1,
+            explanation: "Степень (degree) определяет сложность полинома: degree 1 — линейная, degree 2 — квадратичная, degree 3 — кубическая и т.д."
+        },
+        {
+            id: 10,
+            text: "Согласно основам структур данных Sverchok, что представляет собой «список полигонов» с точки зрения вложенности (уровень 2) при работе с мешами?",
+            options: [
+                "[[v1, v2, v3], [v4, v5, v6]] — где каждый элемент это список координат вершин одного полигона.",
+                "Одномерный массив вершин.",
+                "Массив рёбер без вершин.",
+                "Полигоны, заданные индексами, и отдельно список вершин."
+            ],
+            correct: 0,
+            explanation: "В Sverchok часто используют level 2 для полигонов: список полигонов, каждый из которых список вершин-векторов (встроенная толерантность)."
+        },
+        {
+            id: 11,
+            text: "В контексте «кривых» (Curves) и документации Sverchok, что описывает узел «Adaptive Polyline» или «Adaptive Edge»?",
+            options: [
+                "Создаёт только прямые отрезки без изгибов.",
+                "Строит кривую, автоматически подстраивая количество сегментов для нужной точности формы.",
+                "Преобразует любую кривую в хаотичный шум.",
+                "Генерирует только окружности."
+            ],
+            correct: 1,
+            explanation: "Adaptive методы дискретизируют кривую с переменной плотностью сегментов, чтобы сохранить детали."
+        },
+        {
+            id: 12,
+            text: "Раздел «Implicit Surfaces» в визуальном программировании Sverchok: что является их главной особенностью?",
+            options: [
+                "Они задаются явной формулой F(x,y,z) = const, поверхность определяется изоповерхностью скалярного поля.",
+                "Это всегда полигональные сетки высокого разрешения.",
+                "Неявные поверхности не поддерживаются в Sverchok.",
+                "Они строятся только из NURBS-патчей."
+            ],
+            correct: 0,
+            explanation: "Неявные поверхности (метаболлы, изоповерхности) определяются математическим уравнением без параметризации."
+        },
+        {
+            id: 13,
+            text: "Изучая тему «Data structure index», какая структура является самой гибкой для хранения многодетальных объектов с группировкой (например, несколько независимых кривых или мешей в одном потоке)?",
+            options: [
+                "Простой плоский список.",
+                "Древовидная структура данных (Tree / nested list), где каждый уровень ветки соответствует вложенности объектов.",
+                "Только JSON строка.",
+                "Текстовый файл."
+            ],
+            correct: 1,
+            explanation: "Древовидные данные (или многоуровневые списки) необходимы для представления сложных сцен с разными объектами/островами геометрии."
+        },
+        {
+            id: 14,
+            text: "Какое из определений наиболее точно соответствует «векторному полю» в Sverchok (на базе документации по Vector Fields)?",
+            options: [
+                "Набор векторов, привязанных к каждой вершине меша.",
+                "Функция, присваивающая вектор каждой точке пространства (Fx, Fy, Fz).",
+                "Градиент скалярного поля, вычисленный автоматически.",
+                "Только магнитные силовые линии."
+            ],
+            correct: 1,
+            explanation: "Векторное поле — это отображение из точки пространства в вектор, широко используется в симуляциях потоков."
+        },
+        {
+            id: 15,
+            text: "В документации советуют: чтобы соединить кривые NURBS в одну непрерывную сложную форму, нужно использовать такие ноды как «Join Curves» или «Append». Что при этом критически важно для плавного стыка?",
+            options: [
+                "Одинаковое количество контрольных точек на каждой кривой.",
+                "Совместимость параметров: степень и согласованность стыков (обычно непрерывность C0 или C1).",
+                "Цвет и материал кривых.",
+                "Одинаковая длина каждой кривой."
+            ],
+            correct: 1,
+            explanation: "Для гладкого соединения нужно учитывать степень и расположение контрольных точек на стыке, чтобы избежать излома."
+        },
+        {
+            id: 16,
+            text: "Одним из фундаментальных понятий в нодах Sverchok для работы с поверхностями и кривыми является «UV-пространство». Что это такое?",
+            options: [
+                "Особая система цветокодирования.",
+                "Двумерная параметрическая область (u,v), на которой задана NURBS-поверхность или параметрическая кривая.",
+                "Альтернативное название для осей X и Y.",
+                "Сжатие геометрии без потерь."
+            ],
+            correct: 1,
+            explanation: "UV-координаты определяют, как поверхность отображается из 2D параметрического прямоугольника в 3D-форму."
+        },
+        {
+            id: 17,
+            text: "В разделе о структурах данных упоминается «match by level» (сопоставление по уровню). Что это означает при работе с несколькими входами нода (например, вершин и полигонов)?",
+            options: [
+                "Игнорирование всех вложенностей.",
+                "Автоматическое выравнивание вложенности списков, чтобы данные на одинаковых уровнях обрабатывались совместно.",
+                "Сортировка данных по алфавиту.",
+                "Случайное перемешивание элементов."
+            ],
+            correct: 1,
+            explanation: "Sverchok использует правила сопоставления вложенности, чтобы корректно сочетать разнородные данные."
+        },
+        {
+            id: 18,
+            text: "В контексте «Solid» и топологии, какое требование делает твердое тело пригодным для булевых операций (Union, Difference) в Sverchok?",
+            options: [
+                "Сетка должна быть треугольной.",
+                "Замкнутая (watertight) сетка без дыр и не-манифолд геометрии.",
+                "Все грани должны быть плоскими.",
+                "Обязательно наличие текстурных координат."
+            ],
+            correct: 1,
+            explanation: "Замкнутая манифолд-геометрия без разрывов — основа для надежных булевых операций."
+        },
+        {
+            id: 19,
+            text: "Согласно «Introduction to geometry», что такое «ребро» (edge) в полигональной модели?",
+            options: [
+                "Отрезок, соединяющий две вершины, базовый элемент топологии.",
+                "Плоский участок между гранями.",
+                "Произвольная кривая без точек.",
+                "Центроид полигона."
+            ],
+            correct: 0,
+            explanation: "Ребро — это связь между двумя вершинами, формирующая ячейку сетки."
+        },
+        {
+            id: 20,
+            text: "В разделе «Scalar Fields / Vector Fields» для процедурного моделирования ландшафта, какой подход наиболее эффективен?",
+            options: [
+                "Вручную расставлять каждую вершину.",
+                "Использовать шум Перлина или сумму синусоид как скалярное поле, затем изоповерхность/смещение вершин.",
+                "Только импорт готовых моделей.",
+                "Использовать исключительно NURBS."
+            ],
+            correct: 1,
+            explanation: "Скалярные поля + шум позволяют генерировать органические ландшафты и неровности без ручной работы."
+        }
+    ];
+
+    function renderQuiz() {
+        const container = document.getElementById('questions-container');
+        let html = '';
+        questions.forEach((q, idx) => {
+            html += `<div class="question-block" id="q-block-${idx}">`;
+            html += `<div class="question-title">${idx+1}. ${q.text}</div>`;
+            html += `<div class="options">`;
+            q.options.forEach((opt, optIdx) => {
+                html += `<label><input type="radio" name="q${idx}" value="${optIdx}"> ${opt}</label>`;
+            });
+            html += `</div><div class="explanation" id="expl-${idx}" style="display:none;"></div></div>`;
+        });
+        container.innerHTML = html;
+    }
+
+    function checkResults() {
+        let score = 0;
+        let allAnswered = true;
+
+        for (let i = 0; i < questions.length; i++) {
+            const selected = document.querySelector(`input[name="q${i}"]:checked`);
+            const explDiv = document.getElementById(`expl-${i}`);
+            if (!selected) {
+                allAnswered = false;
+                explDiv.style.display = 'block';
+                explDiv.innerHTML = `<span class="incorrect">⚠️ Вопрос без ответа.</span> <br> Чтобы продолжить, выберите вариант.`;
+                continue;
+            }
+            const userVal = parseInt(selected.value);
+            explDiv.style.display = 'block';
+            if (userVal === questions[i].correct) {
+                score++;
+                explDiv.innerHTML = `<span class="correct">✓ Верно!</span><br> ${questions[i].explanation}`;
+            } else {
+                let correctText = questions[i].options[questions[i].correct];
+                explDiv.innerHTML = `<span class="incorrect">✗ Неверно.</span> Правильный ответ: ${correctText}<br> ${questions[i].explanation}`;
+            }
+        }
+
+        if (!allAnswered) {
+            alert("Пожалуйста, ответьте на все вопросы теста (включая пропущенные).");
+            return;
+        }
+
+        const resultDiv = document.getElementById('result');
+        resultDiv.style.display = 'block';
+        let gradeMessage = "";
+        if (score >= 18) gradeMessage = "🏆 Блестяще! Вы отлично ориентируетесь в структурах данных и геометрическом ядре Sverchok.";
+        else if (score >= 14) gradeMessage = "✅ Хорошо! Знаете как работают кривые, поверхности и вложенные данные, но есть нюансы для изучения.";
+        else if (score >= 10) gradeMessage = "📚 Неплохо, но стоит перечитать документацию про NURBS, векторные поля и уровни вложенности.";
+        else gradeMessage = "📖 Начните с раздела Data Structure и Introduction to geometry — это база Sverchok. Практикуйтесь!";
+
+        resultDiv.innerHTML = `<div class="result-stats">🎯 Ваш результат: ${score} из ${questions.length}</div>
+                               <p>${gradeMessage}</p>
+                               <p style="margin-top:8px; font-size:0.9rem;">💡 Советы: изучите «матрешечную» структуру, NURBS-кривые и скалярные поля — ключ к продвинутой процедурной геометрии.</p>`;
+        resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    renderQuiz();
+    document.getElementById('submit-btn').addEventListener('click', checkResults);
+</script>
+</body>
+</html>
